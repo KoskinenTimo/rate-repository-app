@@ -1,9 +1,12 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Constants from 'expo-constants';
 import theme from '../theme';
 import Text from './Text';
 import { Link } from 'react-router-native';
+import { useApolloClient, useQuery } from '@apollo/client';
+import { GET_AUTH_USER } from '../graphql/queries';
+import useAuthStorage from '../hooks/useAuthStorage';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +27,26 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+  const { data, refetch } = useQuery(GET_AUTH_USER);
+  const [ loginVisible, setLoginVisible ] = useState(true);
+  const authStorage = useAuthStorage();
+  const apolloClient = useApolloClient();
+
+  useEffect(() => {
+    if (data && data.authorizedUser) {
+      setLoginVisible(false);
+    }
+    if (!data || !data.authorizedUser) {
+      setLoginVisible(true);
+    }
+  }, [data]);
+
+  const logOut = async () => {
+    await authStorage.removeAccessToken();
+    apolloClient.resetStore();
+    refetch();
+  };
+
   return (
   <View style={styles.container}>
     <ScrollView 
@@ -39,15 +62,30 @@ const AppBar = () => {
           Repositories
         </Text>
       </Link>
-      <Link to="/signin">
-        <Text
-          fontSize="subheading"
-          style={styles.link}
-          fontWeight="bold"
-        >
-          Sign In
-        </Text>        
-      </Link>
+      {
+        loginVisible 
+        ?
+        <Link to="/signin">
+          <Text
+            fontSize="subheading"
+            style={styles.link}
+            fontWeight="bold"
+          >
+            Sign In
+          </Text>        
+        </Link> 
+        :
+        <Pressable onPress={logOut}>
+          <Text
+            fontSize="subheading"
+            style={styles.link}
+            fontWeight="bold"
+          >
+            Sign Out
+          </Text> 
+        </Pressable>
+      }
+
     </ScrollView>
   </View>);
 };
