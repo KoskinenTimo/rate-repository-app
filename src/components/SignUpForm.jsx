@@ -11,7 +11,7 @@ const styles = {
     justifyContent: 'space-evenly',
     padding: 30
   },
-  button: {
+  formButton: {
     backgroundColor: theme.colors.primary,
     color: theme.colors.textWhite,
     width: 300,
@@ -24,23 +24,26 @@ const styles = {
   }
 };
 
-const LoginForm = ({ onSubmit }) => {
+const SignUpForm = ({ onSubmit }) => {
   return (
-    
     <View style={styles.form}>
-      <FormikTextInput name='username' placeholder='Username'/>
-      <FormikTextInput name='password' placeholder='Password' secureTextEntry/> 
-      <Pressable onPress={onSubmit}>
+      <FormikTextInput testID='signupUsername' name='signupUsername' placeholder='Username'/>
+      <FormikTextInput testID='signupPassword' name='signupPassword' placeholder='Password' secureTextEntry/>
+      <FormikTextInput testID='signupPasswordConfirm' name='signupPasswordConfirm' placeholder='Password Confirm' secureTextEntry/> 
+      <Pressable 
+        onPress={onSubmit}
+        testID='signUpSubmit'
+      >
         <Text
-          style={styles.button}
+          style={styles.formButton}
           fontSize="subheading"
           fontWeight="bold"
         >
-          Sign in
+          Sign up
         </Text>
       </Pressable>  
     </View>
   );
-};
+}
 
-export default LoginForm;
+export default SignUpForm;

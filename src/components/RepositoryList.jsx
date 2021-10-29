@@ -1,38 +1,35 @@
-import React from 'react';
-import {
-  FlatList,
-  View,
-  StyleSheet
-} from 'react-native';
-import RepositoryItem from './RepositoryItem';
+import React, { useState } from 'react';
+import RepositoryListContainer from './RepositoryListContainer';
 import useRepositories from '../hooks/useRepositories';
+import { useDebounce } from 'use-debounce';
+import { useHistory } from 'react-router';
 
-const styles = StyleSheet.create({
-  separator: {
-    height: 10
-  },
-});
-
-const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
+  const [ selectedOrder, setSelectedOrder ] = useState('latest');  
+  const [ search, setSearch ] = useState('');
+  const [ searchValue ] = useDebounce(search, 400);
+  const { repositories, fetchMore } = useRepositories(selectedOrder,searchValue);
+  const history = useHistory();
 
-  // Get the nodes from the edges array
-  const repositoryNodes = repositories
-    ? repositories.edges.map(edge => edge.node)
-    : [];
-  const renderItem = ({ item }) => {
-    return <RepositoryItem item={item} />;
+  const onEndReach = () => {
+    console.log('fetching more repositories');
+    fetchMore();    
   };
-  return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={renderItem}
-      keyExtractor={r => r.id}
-    />
-  );
+
+  return <RepositoryListContainer
+      repositories={
+        repositories ? 
+        repositories.edges.map(edge => edge.node) :
+        []
+      }
+      setSelectedOrder={setSelectedOrder}
+      selectedOrder={selectedOrder}
+      search={search}
+      setSearch={setSearch}
+      history={history}
+      onEndReach={onEndReach}
+    />;
 };
 
 export default RepositoryList;

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: theme.colors.textWhite,
-    padding: 10
+    padding: 13
   },
   horizontalBar: {
     display: 'flex',
@@ -65,25 +65,47 @@ const AppBar = () => {
       {
         loginVisible 
         ?
-        <Link to="/signin">
-          <Text
-            fontSize="subheading"
-            style={styles.link}
-            fontWeight="bold"
-          >
-            Sign In
-          </Text>        
-        </Link> 
+        <>
+          <Link to="/signin">
+            <Text
+              fontSize="subheading"
+              style={styles.link}
+              fontWeight="bold"
+            >
+              Sign In
+            </Text>        
+          </Link>
+          <Link to="/signup">
+            <Text
+              fontSize="subheading"
+              style={styles.link}
+              fontWeight="bold"
+            >
+              Sign Up
+            </Text>
+          </Link>
+        </>
         :
-        <Pressable onPress={logOut}>
-          <Text
-            fontSize="subheading"
-            style={styles.link}
-            fontWeight="bold"
-          >
-            Sign Out
-          </Text> 
-        </Pressable>
+        <>
+          <Pressable onPress={logOut}>
+            <Text
+              fontSize="subheading"
+              style={styles.link}
+              fontWeight="bold"
+            >
+              Sign Out
+            </Text> 
+          </Pressable>
+          <Link to="/review">
+            <Text
+              fontSize="subheading"
+              style={styles.link}
+              fontWeight="bold"
+            >
+              Create a review
+            </Text>
+          </Link>
+        </>
       }
 
     </ScrollView>
