@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
 })
 const ReviewsListItem = ({ review, myreviews=false, refetch }) => {
   const history = useHistory();
+  // eslint-disable-next-line no-unused-vars
   const [ deleteReview, result ] = useMutation(DELETE_REVIEW, {
     variables: {
       id: review.id
