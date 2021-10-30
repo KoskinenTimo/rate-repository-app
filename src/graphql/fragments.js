@@ -14,3 +14,19 @@ export const REPOSITORY_BASE = gql`
     ratingAverage
   }
 `;
+
+export const REVIEW_DATA = gql`
+  fragment ReviewData on Review {
+    id
+    text
+    rating
+    createdAt
+    repository {
+      id
+      fullName
+    }
+    user {
+      username
+    }
+  }
+`

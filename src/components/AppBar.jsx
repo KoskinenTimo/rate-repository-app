@@ -4,9 +4,9 @@ import Constants from 'expo-constants';
 import theme from '../theme';
 import Text from './Text';
 import { Link } from 'react-router-native';
-import { useApolloClient, useQuery } from '@apollo/client';
-import { GET_AUTH_USER } from '../graphql/queries';
+import { useApolloClient } from '@apollo/client';
 import useAuthStorage from '../hooks/useAuthStorage';
+import useAuthUser from '../hooks/useAuthUser';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,19 +27,19 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const { data, refetch } = useQuery(GET_AUTH_USER);
+  const { authUser, refetch } = useAuthUser();
   const [ loginVisible, setLoginVisible ] = useState(true);
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
 
   useEffect(() => {
-    if (data && data.authorizedUser) {
+    if (authUser) {
       setLoginVisible(false);
     }
-    if (!data || !data.authorizedUser) {
+    if (!authUser) {
       setLoginVisible(true);
     }
-  }, [data]);
+  }, [authUser]);
 
   const logOut = async () => {
     await authStorage.removeAccessToken();
@@ -87,15 +87,6 @@ const AppBar = () => {
         </>
         :
         <>
-          <Pressable onPress={logOut}>
-            <Text
-              fontSize="subheading"
-              style={styles.link}
-              fontWeight="bold"
-            >
-              Sign Out
-            </Text> 
-          </Pressable>
           <Link to="/review">
             <Text
               fontSize="subheading"
@@ -105,6 +96,25 @@ const AppBar = () => {
               Create a review
             </Text>
           </Link>
+          <Link to="/myreviews">
+            <Text
+              fontSize="subheading"
+              style={styles.link}
+              fontWeight="bold"
+            >
+              My Reviews
+            </Text>
+          </Link>
+          <Pressable onPress={logOut}>
+            <Text
+              fontSize="subheading"
+              style={styles.link}
+              fontWeight="bold"
+            >
+              Sign Out
+            </Text> 
+          </Pressable>
+
         </>
       }
 

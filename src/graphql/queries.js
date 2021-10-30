@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { REPOSITORY_BASE } from './fragments';
+import { REPOSITORY_BASE, REVIEW_DATA } from './fragments';
 
 
 export const GET_REPOSITORIES = gql`
@@ -34,16 +34,38 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const GET_AUTH_USER = gql`
-  query {
-    authorizedUser {
-      id
-      username
+  ${REVIEW_DATA}
+    query (
+      $includeReviews: Boolean = false,
+      $first: Int
+      $after: String
+      ){
+      authorizedUser {
+        id
+        username
+        reviews (
+          first: $first,
+          after:$after
+        ) @include(if: $includeReviews) {
+          totalCount
+          edges {
+            node {
+              ...ReviewData              
+            }
+          }
+          pageInfo {
+            hasNextPage 
+            startCursor 
+            endCursor
+          }
+        }
+      }
     }
-  }
 `;
 
 export const GET_ONE_REPO = gql`
   ${REPOSITORY_BASE}
+  ${REVIEW_DATA}
   query (
     $id: ID!
     $first: Int,
@@ -58,14 +80,7 @@ export const GET_ONE_REPO = gql`
       ){
         edges {
           node {
-            id
-            text
-            rating
-            createdAt
-            user {
-              id
-              username
-            }
+            ...ReviewData
           }
         }
         pageInfo {

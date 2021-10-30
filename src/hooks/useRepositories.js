@@ -12,7 +12,7 @@ const useRepositories = (selectedOrder,searchValue) => {
       orderBy: selectedOrder === 'latest' ? 'CREATED_AT' : 'RATING_AVERAGE',
       orderDirection: selectedOrder === 'lowest' ? 'ASC' : 'DESC',
       searchKeyword: searchValue,
-      first: 3,
+      first: 4,
     }
   });
   
@@ -32,6 +32,7 @@ const useRepositories = (selectedOrder,searchValue) => {
     if (!canFetchMore) {
       return;
     }
+    console.log('fetching more repositories');
     fetchMore({      
       variables: {
         orderBy: selectedOrder === 'latest' ? 'CREATED_AT' : 'RATING_AVERAGE',

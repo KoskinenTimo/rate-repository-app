@@ -13,23 +13,22 @@ const RepositoryList = () => {
   const history = useHistory();
 
   const onEndReach = () => {
-    console.log('fetching more repositories');
     fetchMore();    
   };
 
   return <RepositoryListContainer
-      repositories={
-        repositories ? 
-        repositories.edges.map(edge => edge.node) :
-        []
-      }
-      setSelectedOrder={setSelectedOrder}
-      selectedOrder={selectedOrder}
-      search={search}
-      setSearch={setSearch}
-      history={history}
-      onEndReach={onEndReach}
-    />;
+    repositories={
+      repositories ? 
+      repositories.edges.map(edge => edge.node) :
+      []
+    }
+    setSelectedOrder={setSelectedOrder}
+    selectedOrder={selectedOrder}
+    search={search}
+    setSearch={setSearch}
+    history={history}
+    onEndReach={onEndReach}
+  />;
 };
 
 export default RepositoryList;
